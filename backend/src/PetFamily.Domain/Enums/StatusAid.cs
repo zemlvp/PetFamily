@@ -9,10 +9,12 @@ public enum StatusAid
     /// Нуждается в помощи
     /// </summary>
     NeedsHelp,
+    
     /// <summary>
     /// Ищет дом
     /// </summary>
     LookingHome,
+    
     /// <summary>
     /// Нашел дом
     /// </summary>

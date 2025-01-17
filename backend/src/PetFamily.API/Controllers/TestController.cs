@@ -1,4 +1,4 @@
-﻿using CSharpFunctionalExtensions;
+﻿/*using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.Domain.Volunters;
 
@@ -9,7 +9,7 @@ public class TestController : ControllerBase
     // GET
     public IActionResult Get(string fullName, string email)
     {
-        var volunterResult = Volunter.Create(VolunterId.NewVolunterId(), fullName, email);
+        var volunterResult = Volunter.Create(Guid.NewGuid(), fullName, email);
 
         if (volunterResult.IsFailure)
             return BadRequest(volunterResult.Error);
@@ -22,4 +22,4 @@ public class TestController : ControllerBase
     public void SaveVolunter(Volunter volunter)
     {
     }
-}
+}*/

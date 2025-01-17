@@ -1,22 +1,36 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Enums;
-using PetFamily.Domain.Shared;
+using PetFamily.Domain.Volunters.Ids;
+using PetFamily.Domain.Volunters.ValueObjects;
 
-namespace PetFamily.Domain.Volunters;
+namespace PetFamily.Domain.Volunters.Entities;
 
-public class Volunter : Shared.Entity<VolunterId>
-{
-    private readonly List<Pet> _pets = [];
-
+public class Volunter : Entity<VolunterId>
+{    
     // EF Core
-    public Volunter(VolunterId id) : base(id)
+    public Volunter() 
     {
     }
 
-    private Volunter(VolunterId volunterId, string fullName, string email) : base(volunterId)
+    private Volunter(
+        VolunterId id, 
+        string fullName, 
+        Email email, 
+        string description, 
+        PhoneNumber phoneNumber, 
+        int experienceYear,
+        List<SocialNetwork> socialNetworks,
+        List<BankRequisite> bankRequisites,
+        List<Pet> pets) : base(id)
     {
         FullName = fullName;
         Email = email;
+        Description = description;
+        PhoneNumber = phoneNumber;
+        ExperienceYear = experienceYear;
+        _socialNetworks = socialNetworks;
+        _bankRequisites = bankRequisites;
+        _pets = pets;
     }
 
     /// <summary>
@@ -24,7 +38,7 @@ public class Volunter : Shared.Entity<VolunterId>
     /// </summary>
     public string FullName { get; private set; } = default!;
 
-    public string Email { get; private set; } = default!;
+    public Email Email { get; }
 
     /// <summary>
     /// Общее описание
@@ -36,10 +50,20 @@ public class Volunter : Shared.Entity<VolunterId>
     /// </summary>
     public int ExperienceYear { get; private set; }
 
-    public string Phone { get; private set; } = default!;
-    public List<SocialNetwork> SocialNetworks { get; private set; } = default!;
-    public List<BankRequisite> BankDetails { get; private set; } = default!;
+    public PhoneNumber PhoneNumber { get; private set; }
+
+    
+    private List<SocialNetwork> _socialNetworks = [];
+    public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
+
+    
+    private List<BankRequisite> _bankRequisites = [];
+    public IReadOnlyList<BankRequisite> BankRequisites => _bankRequisites;
+
+
+    private readonly List<Pet> _pets = [];
     public IReadOnlyList<Pet> Pets => _pets;
+
 
     public int GetNumberOfPets() => _pets.Count;
 
@@ -58,15 +82,21 @@ public class Volunter : Shared.Entity<VolunterId>
     /// </summary>
     public int GetPetsCountNeedsHelp() => Pets.Count(p => p.StatusAid == StatusAid.NeedsHelp);
 
-    public static Result<Volunter> Create(VolunterId volunterId, string fullName, string email)
+    public static Result<Volunter> Create(
+        VolunterId volunterId, 
+        string fullName, 
+        Email email, 
+        string description, 
+        PhoneNumber phoneNumber,
+        int experienceYear,
+        List<SocialNetwork> socialNetworks,
+        List<BankRequisite> bankRequisites,
+        List<Pet> pets)
     {
         if (string.IsNullOrWhiteSpace(fullName))
             return Result.Failure<Volunter>($"Full name is required");
 
-        if (string.IsNullOrWhiteSpace(email))
-            return Result.Failure<Volunter>($"Email name is required");
-
-        var volunter = new Volunter(volunterId, fullName, email);
+        var volunter = new Volunter(volunterId, fullName, email, description, phoneNumber, experienceYear, socialNetworks, bankRequisites, pets);
 
         return Result.Success(volunter);
     }
