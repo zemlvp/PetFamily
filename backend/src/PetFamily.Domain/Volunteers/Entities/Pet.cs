@@ -1,9 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Enums;
-using PetFamily.Domain.Volunters.Ids;
-using PetFamily.Domain.Volunters.ValueObjects;
+using PetFamily.Domain.Volunteers.Ids;
+using PetFamily.Domain.Volunteers.ValueObjects;
 
-namespace PetFamily.Domain.Volunters.Entities;
+namespace PetFamily.Domain.Volunteers.Entities;
 
 public class Pet : Entity<PetId>
 {
@@ -11,7 +11,7 @@ public class Pet : Entity<PetId>
     public const int MAX_DESCRIPTION_LENGTH = 3000;
 
     // EF Core
-    public Pet()
+    public Pet(PetId id): base(id)
     {
     }
 
@@ -26,7 +26,8 @@ public class Pet : Entity<PetId>
                 bool isCastrated,
                 bool isVaccinated,
                 DateTime birthDay,
-                StatusAid statusAid) : base(id)
+                StatusAid statusAid
+                ) : base(id)
     {
         Name = name;
         Description = description;
@@ -44,22 +45,16 @@ public class Pet : Entity<PetId>
     public string Name { get; } = string.Empty;
     public string Description { get; } = string.Empty;
     public string Color { get; }
-    public string HealthInformation { get; }
-
+    public string? HealthInformation { get; }
     public Address Address { get; }
-
     public float? Weight { get; }
     public float? Height { get; }
     public bool? IsCastrated { get; }
     public bool? IsVaccinated { get; }
     public DateTime? Birthday { get; }
     public StatusAid StatusAid { get; }
-
-    public List<BankRequisite> BankRequisites { get; } = [];
-
     public Guid? SpeciesId { get; private set; }
-    public string? BreedId { get; private set; }
-
+    public Guid? BreedId { get; private set; }
     public DateTime CreatedDate { get; private set; }
 
     public static Result<Pet> Create(
@@ -74,7 +69,8 @@ public class Pet : Entity<PetId>
                 bool isCastrated,
                 bool isVaccinated,
                 DateTime birthDay,
-                StatusAid statusAid)
+                StatusAid statusAid,
+                BankRequisitesDetails bankRequisitesDetails)
     {
         if (string.IsNullOrWhiteSpace(name))
             return Result.Failure<Pet>($"'{nameof(name)}' cannot be null or empty");

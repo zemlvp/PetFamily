@@ -9,7 +9,7 @@ namespace PetFamily.Domain.Species.Entities;
 public class Breed : Entity<BreedId>
 {
     // EF Core
-    public Breed()
+    public Breed(BreedId id): base(id)
     {
     }
     

@@ -1,26 +1,26 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Enums;
-using PetFamily.Domain.Volunters.Ids;
-using PetFamily.Domain.Volunters.ValueObjects;
+using PetFamily.Domain.Volunteers.Ids;
+using PetFamily.Domain.Volunteers.ValueObjects;
 
-namespace PetFamily.Domain.Volunters.Entities;
+namespace PetFamily.Domain.Volunteers.Entities;
 
-public class Volunter : Entity<VolunterId>
-{    
+public sealed class Volunteer : Entity<VolunteerId>
+{   
     // EF Core
-    public Volunter() 
+    public Volunteer(VolunteerId id): base(id) 
     {
     }
 
-    private Volunter(
-        VolunterId id, 
+    private Volunteer(
+        VolunteerId id, 
         string fullName, 
-        Email email, 
+        string email, 
         string description, 
-        PhoneNumber phoneNumber, 
+        string phoneNumber, 
         int experienceYear,
-        List<SocialNetwork> socialNetworks,
-        List<BankRequisite> bankRequisites,
+        SocialNetworkDetails socialNetworkDetails,
+        BankRequisitesDetails bankRequisitesDetails,
         List<Pet> pets) : base(id)
     {
         FullName = fullName;
@@ -28,8 +28,8 @@ public class Volunter : Entity<VolunterId>
         Description = description;
         PhoneNumber = phoneNumber;
         ExperienceYear = experienceYear;
-        _socialNetworks = socialNetworks;
-        _bankRequisites = bankRequisites;
+        SocialNetworkDetails = socialNetworkDetails;
+        BankRequisitesDetails = bankRequisitesDetails;
         _pets = pets;
     }
 
@@ -38,7 +38,7 @@ public class Volunter : Entity<VolunterId>
     /// </summary>
     public string FullName { get; private set; } = default!;
 
-    public Email Email { get; }
+    public string Email { get; }
 
     /// <summary>
     /// Общее описание
@@ -50,27 +50,21 @@ public class Volunter : Entity<VolunterId>
     /// </summary>
     public int ExperienceYear { get; private set; }
 
-    public PhoneNumber PhoneNumber { get; private set; }
+    public string PhoneNumber { get; private set; }
 
-    
-    private List<SocialNetwork> _socialNetworks = [];
-    public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
+    public SocialNetworkDetails? SocialNetworkDetails { get; private set; }
 
-    
-    private List<BankRequisite> _bankRequisites = [];
-    public IReadOnlyList<BankRequisite> BankRequisites => _bankRequisites;
-
+    public BankRequisitesDetails? BankRequisitesDetails { get; private set; }
 
     private readonly List<Pet> _pets = [];
     public IReadOnlyList<Pet> Pets => _pets;
-
 
     public int GetNumberOfPets() => _pets.Count;
 
     /// <summary>
     /// Количество домашних животных, которые смогли найти дом
     /// </summary>
-    public int GetPetsCountFoundHome() => Pets.Count(p => p.StatusAid == StatusAid.FoundHome);
+    public int GetPetsCountFoundedHome() => Pets.Count(p => p.StatusAid == StatusAid.FoundHome);
 
     /// <summary>
     /// Количество домашних животных, которые ищут дом в данный момент времени 
@@ -82,23 +76,24 @@ public class Volunter : Entity<VolunterId>
     /// </summary>
     public int GetPetsCountNeedsHelp() => Pets.Count(p => p.StatusAid == StatusAid.NeedsHelp);
 
-    public static Result<Volunter> Create(
-        VolunterId volunterId, 
+    public static Result<Volunteer> Create(
+        VolunteerId volunteerId, 
         string fullName, 
-        Email email, 
+        string email, 
         string description, 
-        PhoneNumber phoneNumber,
+        string phoneNumber,
         int experienceYear,
-        List<SocialNetwork> socialNetworks,
-        List<BankRequisite> bankRequisites,
+        SocialNetworkDetails socialNetworksDetails,
+        BankRequisitesDetails bankRequisitesDetails,
         List<Pet> pets)
     {
         if (string.IsNullOrWhiteSpace(fullName))
-            return Result.Failure<Volunter>($"Full name is required");
+            return Result.Failure<Volunteer>($"Full name is required");
 
-        var volunter = new Volunter(volunterId, fullName, email, description, phoneNumber, experienceYear, socialNetworks, bankRequisites, pets);
+        var volunteer = new Volunteer(volunteerId, fullName, email, description, phoneNumber, experienceYear, 
+                                      socialNetworksDetails, bankRequisitesDetails, pets);
 
-        return Result.Success(volunter);
+        return Result.Success(volunteer);
     }
 
     public void AddPet(Pet pet)

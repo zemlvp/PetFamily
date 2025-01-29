@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using System.Text.RegularExpressions;
 
-namespace PetFamily.Domain.Volunters.ValueObjects
+namespace PetFamily.Domain.Volunteers.ValueObjects
 {
     public class Email : ComparableValueObject
     {

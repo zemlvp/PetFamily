@@ -1,0 +1,16 @@
+﻿services:
+  db:
+    container_name: postgres-pet-family
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: pet_family
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5434:5432
+    volumes:
+      - postgres-data:/var/lib/postrgresql/data
+
+volumes:
+  postgres-data:

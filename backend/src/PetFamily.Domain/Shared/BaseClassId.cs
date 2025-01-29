@@ -1,19 +1,16 @@
 ﻿using CSharpFunctionalExtensions;
 
-namespace PetFamily.Domain.Volunters.Ids;
+namespace PetFamily.Domain.Shared;
 
-public class PetId : ComparableValueObject
+public class BaseClassId : ComparableValueObject
 {
     public Guid Value { get; }
     
-    private PetId(Guid value)
+    protected BaseClassId(Guid value)
     {
         Value = value;
     }
     
-    public static PetId NewPetId()  => new(Guid.NewGuid());
-    public static PetId Empty()  => new(Guid.Empty);
-
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()
     {
         yield return Value;
