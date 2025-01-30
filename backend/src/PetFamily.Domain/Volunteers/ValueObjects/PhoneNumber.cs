@@ -1,10 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using System.Text.RegularExpressions;
 
-namespace PetFamily.Domain.Volunters.ValueObjects
+namespace PetFamily.Domain.Volunteers.ValueObjects
 {
     public class PhoneNumber : ComparableValueObject
     {
+        public const int MAX_LENGTH = 11;
         private const string PHONE_REGEX = @"^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$";
 
         public string Number { get;  }

@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 
-namespace PetFamily.Domain.Volunters.ValueObjects;
+namespace PetFamily.Domain.Volunteers.ValueObjects;
 
 /// <summary>
 /// Банковские реквизиты 
